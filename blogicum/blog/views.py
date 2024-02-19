@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, Http404
 
 
 posts: list[dict] = [
@@ -47,18 +47,17 @@ posts: list[dict] = [
 
 
 def index(request: HttpRequest) -> HttpResponse:
-    template = 'blog/index.html'
-    context = {'posts_list': posts[::-1]}
-    return render(request, template, context)
+    return render(request, 'blog/index.html', {'posts_list': posts})
 
 
 def post_detail(request, pk):
-    template = 'blog/detail.html'
-    context = {'post': posts[pk]}
-    return render(request, template, context)
+    try:
+        post = posts[pk]
+    except IndexError:
+        raise Http404('Ошибка:Пост с таким номером не найден.')
+    return render(request, 'blog/detail.html', {'post': post})
 
 
 def category_posts(request, category_slug):
-    template = 'blog/category.html'
-    context = {'category_slug': category_slug}
-    return render(request, template, context)
+    return render(request, 'blog/category.html',
+                  {'category_slug': category_slug})
