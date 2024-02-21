@@ -6,6 +6,7 @@
   {% for post in posts_list reversed %}                     
       <article>
         {% include "includes/post_card.html" %}
+        <p>
           {{ post.text|truncatewords:10 }}
         </p>
         <a href="{% url 'blog:post_detail' post.id %}">Читать полный текст</a>
